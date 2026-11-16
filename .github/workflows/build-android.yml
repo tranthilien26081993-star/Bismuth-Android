@@ -14,18 +14,14 @@ jobs:
           submodules: recursive
           fetch-depth: 0
 
-      - name: Patch OpenGL Headers for Android
+      - name: Stub Windows specific cl.cpp for Android
         run: |
           python3 -c "
           import glob
-          for path in glob.glob('**/Buffer.hpp', recursive=True):
-              with open(path, 'r') as f:
-                  content = f.read()
-              patch = '#ifndef GL_GLEXT_PROTOTYPES\n#define GL_GLEXT_PROTOTYPES 1\n#endif\n#include <GLES3/gl32.h>\n#include <GLES3/gl32ext.h>\n'
-              if 'GL_UNIFORM_BUFFER' in content and 'gl32.h' not in content:
-                  with open(path, 'w') as f:
-                      f.write(patch + content)
-                  print('Patched:', path)
+          for path in glob.glob('**/cl.cpp', recursive=True):
+              with open(path, 'w') as f:
+                  f.write('// Stubbed for Android\n')
+              print('Stubbed:', path)
           "
 
       - name: Build Geode Mod
