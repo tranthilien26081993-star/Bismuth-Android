@@ -14,11 +14,20 @@ jobs:
           submodules: recursive
           fetch-depth: 0
 
+      - name: Stub GPUTimer for Android
+        run: |
+          python3 -c "
+          import glob
+          for path in glob.glob('**/GPUTimer.hpp', recursive=True):
+              with open(path, 'w') as f:
+                  f.write('#pragma once\nstruct GPUTimer { GPUTimer(const char*) {} ~GPUTimer() {} };\n')
+              print('Stubbed:', path)
+          "
+
       - name: Build Geode Mod
         uses: geode-sdk/build-geode-mod@main
         with:
           target: Android64
-          configure-args: '["-DCMAKE_CXX_FLAGS=-DGL_GLEXT_PROTOTYPES -DGL_ES_VERSION_3_0=1"]'
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
