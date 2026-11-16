@@ -14,14 +14,18 @@ jobs:
           submodules: recursive
           fetch-depth: 0
 
-      - name: Stub GPUTimer for Android
+      - name: Patch OpenGL Headers for Android
         run: |
           python3 -c "
           import glob
-          for path in glob.glob('**/GPUTimer.hpp', recursive=True):
-              with open(path, 'w') as f:
-                  f.write('#pragma once\nstruct GPUTimer { GPUTimer(const char*) {} ~GPUTimer() {} };\n')
-              print('Stubbed:', path)
+          for path in glob.glob('**/Buffer.hpp', recursive=True):
+              with open(path, 'r') as f:
+                  content = f.read()
+              patch = '#ifndef GL_GLEXT_PROTOTYPES\n#define GL_GLEXT_PROTOTYPES 1\n#endif\n#include <GLES3/gl32.h>\n#include <GLES3/gl32ext.h>\n'
+              if 'GL_UNIFORM_BUFFER' in content and 'gl32.h' not in content:
+                  with open(path, 'w') as f:
+                      f.write(patch + content)
+                  print('Patched:', path)
           "
 
       - name: Build Geode Mod
