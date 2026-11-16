@@ -1,0 +1,23 @@
+name: Build Bismuth Android
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "master", "main" ]
+
+jobs:
+  build:
+    name: Build Android64
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Build Geode Mod
+        uses: geode-sdk/build-geode-mod@v1
+        with:
+          platform: android64
+          
