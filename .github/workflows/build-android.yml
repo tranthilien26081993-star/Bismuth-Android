@@ -1,4 +1,4 @@
-name: Build Bismuth Android
+name: Build Android Mod
 
 on:
   workflow_dispatch:
@@ -7,17 +7,20 @@ on:
 
 jobs:
   build:
-    name: Build Android64
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
 
       - name: Build Geode Mod
-        uses: geode-sdk/build-geode-mod@v1
+        uses: geode-sdk/build-geode-mod@main
         with:
-          platform: android64
+          target: android64
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: geode-mod
+          path: build/*.geode
           
