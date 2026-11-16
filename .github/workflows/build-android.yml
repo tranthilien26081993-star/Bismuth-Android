@@ -18,6 +18,7 @@ jobs:
         uses: geode-sdk/build-geode-mod@main
         with:
           target: Android64
+          configure-args: '["-DGEODE_DISABLE_PC_CHECKS=ON"]'
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
